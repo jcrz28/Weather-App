@@ -2,6 +2,23 @@ const API_KEY = "YOUR_API_KEY";
 const WEATHER_WEBSITE = "https://api.openweathermap.org/data/2.5/"
 
 
+const CITY = document.getElementById('city');
+
+const TEMPERATURE = document.getElementById("temperature-today");
+
+const WEATHER = document.getElementById("weather");
+
+const TEMP_MIN_MAX = document.getElementById("min-max-temp");
+
+const HUMIDITY = document.getElementById("humidity");
+
+const WIND = document.getElementById("wind");
+
+const DATE_TODAY = document.getElementById('date-today');
+
+const TIME_TODAY = document.getElementById('time-today');
+
+
 function setBackground(hour){
     if (6 <= hour && hour <= 16){
         document.body.style.backgroundImage = "url(../assets/morning-afternoon.png)";
@@ -28,33 +45,25 @@ function getLocalTime(){
 }
 
 function setDateAndTime(timezone){    
-    let dateToday = document.getElementById('date-today');
-    let timeToday = document.getElementById('time-today');
-
     let utc = getLocalTime()
     let cityTime = utc + (1000 * timezone);
 
     let date = new Date(cityTime)
-    dateToday.textContent = date.toDateString();
-    timeToday.textContent = date.toLocaleTimeString();
+
+    DATE_TODAY.textContent = date.toDateString();
+    TIME_TODAY.textContent = date.toLocaleTimeString();
 
     setBackground(date.getHours())
 }
 
 function setWeatherInfo(location){
-    let city = document.getElementById('city');
-    let temperature = document.getElementById("temperature-today");
-    let weather = document.getElementById("weather");
-    let tempMinMax = document.getElementById("min-max-temp");
-    let humidity = document.getElementById("humidity");
-    let wind = document.getElementById("wind");
+    CITY.textContent = `${location.name}, ${location.sys.country}`;
+    TEMPERATURE.textContent = `${location.main.temp} F`
+    WEATHER.textContent = `${location.weather[0].main} - ${location.weather[0].description}`
+    TEMP_MIN_MAX.textContent = `L: ${location.main.temp_min} F / H: ${location.main.temp_max} F`
+    HUMIDITY.textContent = `Humidity: ${location.main.humidity} %`;
+    WIND.textContent = `Wind: ${Math.round(location.wind.speed)} mph`
 
-    city.textContent = `${location.name}, ${location.sys.country}`;
-    temperature.textContent = `${location.main.temp} F`
-    weather.textContent = `${location.weather[0].main} - ${location.weather[0].description}`
-    tempMinMax.textContent = `L: ${location.main.temp_min} F / H: ${location.main.temp_max} F`
-    humidity.textContent = `Humidity: ${location.main.humidity} %`;
-    wind.textContent = `Wind: ${Math.round(location.wind.speed)} mph`
     console.log(location);
 
     setDateAndTime(location.timezone);
@@ -74,10 +83,10 @@ function getKeyEvent(keyEvent){
 }
 
 function getPosition(position){
-    let latitude = position.coords.latitude;
-    let longitude = position.coords.longitude;
+    const LATITUDE = position.coords.latitude;
+    const LONGITUDE = position.coords.longitude;
 
-    fetch(`${WEATHER_WEBSITE}weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=imperial`)
+    fetch(`${WEATHER_WEBSITE}weather?lat=${LATITUDE}&lon=${LONGITUDE}&appid=${API_KEY}&units=imperial`)
     .then(weather => {
         return weather.json();
     }).then(setWeatherInfo);
