@@ -19,18 +19,63 @@ const DATE_TODAY = document.getElementById('date-today');
 const TIME_TODAY = document.getElementById('time-today');
 
 
-function setBackground(hour){
-    if (6 <= hour && hour <= 16){
-        document.body.style.backgroundImage = "url(../assets/morning-afternoon.png)";
-        document.body.style.color = "black";
+function getDawnImage(weatherID){
+    if ((200 <= weatherID && weatherID <= 299) || (300 <= weatherID && weatherID <= 399) || (500 <= weatherID && weatherID <= 599)){
+        return "url(../assets/rain-dawn-night.jpg)";
 
-    }else if (17 <= hour && hour <= 18){
-        document.body.style.backgroundImage = "url(../assets/late-afternoon.png)";
-        document.body.style.color = "black";
+    }else if (600 <= weatherID && weatherID <= 699){
+        return "url(../assets/snow-dawn-night.jpg)";
         
     }else{
-        document.body.style.backgroundImage = "url(../assets/night.png)";
-        document.body.style.color = "white";
+        return "url(../assets/dawn.jpg)";
+    }
+}
+
+function getMorningImage(weatherID){
+    if ((200 <= weatherID && weatherID <= 299) || (300 <= weatherID && weatherID <= 399) || (500 <= weatherID && weatherID <= 599)){
+        return "url(../assets/rain-morning-afternoon.jpg)";
+
+    }else if (600 <= weatherID && weatherID <= 699){
+        return "url(../assets/snow-morning-afternoon.jpg)";
+
+    }else{
+        return "url(../assets/morning-afternoon.jpg)";
+    }
+}
+
+function getLateAfternoonImage(weatherID){
+    if ((200 <= weatherID && weatherID <= 299) || (300 <= weatherID && weatherID <= 399) || (500 <= weatherID && weatherID <= 599)){
+        return "url(../assets/rain-morning-afternoon.jpg)";
+
+    }else if (600 <= weatherID && weatherID <= 699){
+        return "url(../assets/snow-morning-afternoon.jpg)";
+
+    }else{
+        return "url(../assets/late-afternoon.jpg)";
+    }
+}
+
+function getNightImage(weatherID){
+    if ((200 <= weatherID && weatherID <= 299) || (300 <= weatherID && weatherID <= 399) || (500 <= weatherID && weatherID <= 599)){
+        return "url(../assets/rain-dawn-night.jpg)";
+
+    }else if (600 <= weatherID && weatherID <= 699){
+        return "url(../assets/snow-dawn-night.jpg)";
+
+    }else{
+        return "url(../assets/night.jpg)";
+    }
+}
+
+function setBackground(hour, weatherID){
+    if (5 <= hour && hour <= 6){
+        document.body.style.backgroundImage = getDawnImage(weatherID);
+    }else if (7 <= hour && hour <= 16){
+        document.body.style.backgroundImage = getMorningImage(weatherID);
+    }else if (17 <= hour && hour <= 18){
+        document.body.style.backgroundImage = getLateAfternoonImage(weatherID); 
+    }else{
+        document.body.style.backgroundImage = getNightImage(weatherID);
     }
 }
 
@@ -44,7 +89,7 @@ function getLocalTime(){
     return localTime + localOffset;
 }
 
-function setDateAndTime(timezone){    
+function setDateAndTime(timezone, weatherID){    
     let utc = getLocalTime()
     let cityTime = utc + (1000 * timezone);
 
@@ -53,20 +98,24 @@ function setDateAndTime(timezone){
     DATE_TODAY.textContent = date.toDateString();
     TIME_TODAY.textContent = date.toLocaleTimeString();
 
-    setBackground(date.getHours())
+    setBackground(date.getHours(), weatherID)
 }
 
 function setWeatherInfo(location){
     CITY.textContent = `${location.name}, ${location.sys.country}`;
-    TEMPERATURE.textContent = `${location.main.temp} F`
-    WEATHER.textContent = `${location.weather[0].main} - ${location.weather[0].description}`
-    TEMP_MIN_MAX.textContent = `L: ${location.main.temp_min} F / H: ${location.main.temp_max} F`
+
+    TEMPERATURE.textContent = `${location.main.temp} F`;
+
+    WEATHER.textContent = `${location.weather[0].main} - ${location.weather[0].description}`;
+
+    TEMP_MIN_MAX.textContent = `L: ${location.main.temp_min} F / H: ${location.main.temp_max} F`;
+
     HUMIDITY.textContent = `Humidity: ${location.main.humidity} %`;
-    WIND.textContent = `Wind: ${Math.round(location.wind.speed)} mph`
+
+    WIND.textContent = `Wind: ${Math.round(location.wind.speed)} mph`;
+    setDateAndTime(location.timezone, location.weather[0].id);
 
     console.log(location);
-
-    setDateAndTime(location.timezone);
 }
 
 function getCity(city){

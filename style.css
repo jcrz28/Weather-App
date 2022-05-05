@@ -6,12 +6,15 @@
 }
 
 body{
+    font-size: calc(16px + 6 * ((100vw - 320px) / 680));
+    color: white;
+
     background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
+    background-size: cover;
+    background-position: top center;
 }
 
-.container{
+main{
     min-height: 100vh;
 
     display: flex;
@@ -19,28 +22,35 @@ body{
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+.container{
+    background-color:rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    border-radius: 2rem;
  }
 
  header{
-    margin: 1rem;
+    padding: 1rem;
  }
 
  header input{
      padding: 0.5rem;
      border-radius: 0.5rem;
+     text-align: center;
  }
 
  input::placeholder{
     text-align: center;
 }
 
-.location-date-details, .location-date-details div, .weather-today{
-    padding: 0.5rem;
+.location-date-details div, #weather, #min-max-temp{
+    padding: 0.8rem;
 }
 
 #temperature-today{
-    font-size: 2rem;
-    padding: 0.5rem;
+    font-size: calc(48px + 6 * ((100vw - 320px) / 680));
+    padding: 2rem;
 }
 
 .extra-details{
@@ -67,6 +77,10 @@ body{
 }
 
 @media screen and (max-width: 600px){
+    .container{
+        padding: 0;
+    }
+
     .extra-details{
         column-gap: 10rem;
     }
