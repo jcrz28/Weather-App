@@ -1,6 +1,7 @@
 const API_KEY = "YOUR_API_KEY";
 const WEATHER_WEBSITE = "https://api.openweathermap.org/data/2.5/"
 
+const SEARCH_BOX = document.querySelector('input');
 
 const CITY = document.getElementById('city');
 
@@ -19,23 +20,31 @@ const DATE_TODAY = document.getElementById('date-today');
 const TIME_TODAY = document.getElementById('time-today');
 
 
+function isRaining (weatherID){
+    return ((200 <= weatherID && weatherID <= 299) || (300 <= weatherID && weatherID <= 399) || (500 <= weatherID && weatherID <= 599));
+}
+
+function isSnowing (weatherID){
+    return (600 <= weatherID && weatherID <= 699);
+}
+
 function getDawnImage(weatherID){
-    if ((200 <= weatherID && weatherID <= 299) || (300 <= weatherID && weatherID <= 399) || (500 <= weatherID && weatherID <= 599)){
+    if (isRaining(weatherID)){
         return "url(../assets/rain-dawn-night.jpg)";
 
-    }else if (600 <= weatherID && weatherID <= 699){
+    }else if (isSnowing(weatherID)){
         return "url(../assets/snow-dawn-night.jpg)";
-        
+
     }else{
         return "url(../assets/dawn.jpg)";
     }
 }
 
 function getMorningImage(weatherID){
-    if ((200 <= weatherID && weatherID <= 299) || (300 <= weatherID && weatherID <= 399) || (500 <= weatherID && weatherID <= 599)){
+    if (isRaining(weatherID)){
         return "url(../assets/rain-morning-afternoon.jpg)";
 
-    }else if (600 <= weatherID && weatherID <= 699){
+    }else if (isSnowing(weatherID)){
         return "url(../assets/snow-morning-afternoon.jpg)";
 
     }else{
@@ -44,10 +53,10 @@ function getMorningImage(weatherID){
 }
 
 function getLateAfternoonImage(weatherID){
-    if ((200 <= weatherID && weatherID <= 299) || (300 <= weatherID && weatherID <= 399) || (500 <= weatherID && weatherID <= 599)){
+    if (isRaining(weatherID)){
         return "url(../assets/rain-morning-afternoon.jpg)";
 
-    }else if (600 <= weatherID && weatherID <= 699){
+    }else if (isSnowing(weatherID)){
         return "url(../assets/snow-morning-afternoon.jpg)";
 
     }else{
@@ -56,10 +65,10 @@ function getLateAfternoonImage(weatherID){
 }
 
 function getNightImage(weatherID){
-    if ((200 <= weatherID && weatherID <= 299) || (300 <= weatherID && weatherID <= 399) || (500 <= weatherID && weatherID <= 599)){
+    if (isRaining(weatherID)){
         return "url(../assets/rain-dawn-night.jpg)";
 
-    }else if (600 <= weatherID && weatherID <= 699){
+    }else if (isSnowing(weatherID)){
         return "url(../assets/snow-dawn-night.jpg)";
 
     }else{
@@ -89,7 +98,7 @@ function getLocalTime(){
     return localTime + localOffset;
 }
 
-function setDateAndTime(timezone, weatherID){    
+function getCalcTimeOffset(timezone){    
     let utc = getLocalTime()
     let cityTime = utc + (1000 * timezone);
 
@@ -98,10 +107,10 @@ function setDateAndTime(timezone, weatherID){
     DATE_TODAY.textContent = date.toDateString();
     TIME_TODAY.textContent = date.toLocaleTimeString();
 
-    setBackground(date.getHours(), weatherID)
+    return date.getHours();
 }
 
-function setWeatherInfo(location){
+function getWeatherInfo(location){
     CITY.textContent = `${location.name}, ${location.sys.country}`;
 
     TEMPERATURE.textContent = `${location.main.temp} F`;
@@ -113,7 +122,9 @@ function setWeatherInfo(location){
     HUMIDITY.textContent = `Humidity: ${location.main.humidity} %`;
 
     WIND.textContent = `Wind: ${Math.round(location.wind.speed)} mph`;
-    setDateAndTime(location.timezone, location.weather[0].id);
+
+    let currentTime = getCalcTimeOffset(location.timezone);
+    setBackground(currentTime, location.weather[0].id);
 
     console.log(location);
 }
@@ -122,12 +133,12 @@ function getCity(city){
     fetch(`${WEATHER_WEBSITE}weather?q=${city}&appid=${API_KEY}&units=imperial`)
     .then(weather => {
         return weather.json();
-    }).then(setWeatherInfo);
+    }).then(getWeatherInfo);
 }
 
 function getKeyEvent(keyEvent){
     if (keyEvent.key == 'Enter'){
-        getCity(searchBox.value);
+        getCity(SEARCH_BOX.value);
     }
 }
 
@@ -138,16 +149,14 @@ function getPosition(position){
     fetch(`${WEATHER_WEBSITE}weather?lat=${LATITUDE}&lon=${LONGITUDE}&appid=${API_KEY}&units=imperial`)
     .then(weather => {
         return weather.json();
-    }).then(setWeatherInfo);
+    }).then(getWeatherInfo);
 }
 
-
-function setCurrentLocation(){
+function getCurrentLocation(){
     if (navigator.geolocation){
         navigator.geolocation.getCurrentPosition(getPosition)
     }
 }
 
-setCurrentLocation();
-const searchBox = document.querySelector('input');
-searchBox.addEventListener('keypress', getKeyEvent);
+getCurrentLocation();
+SEARCH_BOX.addEventListener('keypress', getKeyEvent);
