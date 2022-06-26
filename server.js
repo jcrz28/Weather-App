@@ -11,7 +11,7 @@ const app = express ();
 app.use(express.json());
 app.use(express.static('public'));
 
-app.post ('/weather/targetLocation', (req, res) => {
+app.post ('/weather_targetLocation', (req, res) => {
     let url =`${WEATHER_WEBSITE}weather?q=${req.body.city}&appid=${API}&units=imperial`;
     axios({
         url: url, 
@@ -19,7 +19,7 @@ app.post ('/weather/targetLocation', (req, res) => {
     }).then(data =>res.json(data.data))
 });
 
-app.post ('/weather/currentLocation', (req, res) => {
+app.post ('/', (req, res) => {
     let url = `${WEATHER_WEBSITE}weather?lat=${req.body.latitude}&lon=${req.body.longitude}&appid=${API}&units=imperial`;
     axios({
         url: url, 

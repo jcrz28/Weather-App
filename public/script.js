@@ -126,7 +126,7 @@ function getWeatherInfo(location){
 }
 
 function getCity(city){
-  fetch('/weather/targetLocation', {
+  fetch('/weather_targetLocation', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -147,7 +147,7 @@ function getKeyEvent(keyEvent){
 }
 
 function getPosition(position){
-  fetch('/weather/currentLocation', {
+  fetch('/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

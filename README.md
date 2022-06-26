@@ -1,4 +1,7 @@
 # Weather-App
 
-## Run script
+## Install Dependencies
+`npm install`
+
+## Run Script
 `npm run start`
