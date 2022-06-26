@@ -1,0 +1,87 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+body{
+    font-size: calc(16px + 6 * ((100vw - 320px) / 680));
+    color: white;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top center;
+}
+
+main{
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container{
+    background-color:rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    border-radius: 2rem;
+ }
+
+ header{
+    padding: 1rem;
+ }
+
+ header input{
+     padding: 0.5rem;
+     border-radius: 0.5rem;
+     text-align: center;
+ }
+
+ input::placeholder{
+    text-align: center;
+}
+
+.location-date-details div, #weather, #min-max-temp{
+    padding: 0.8rem;
+}
+
+#temperature-today{
+    font-size: calc(48px + 6 * ((100vw - 320px) / 680));
+    padding: 2rem;
+}
+
+.extra-details{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+@media screen and (min-width: 700px){
+    .extra-details{
+        column-gap: 20rem;
+    }
+    .extra-details div{
+        padding: 1rem;
+    }
+}
+
+@media screen and (max-width: 700px){
+    .extra-details{
+        column-gap: 20rem;
+    }
+    .extra-details div{
+        padding: 0.5rem;
+    }
+}
+
+@media screen and (max-width: 600px){
+    .container{
+        padding: 0;
+    }
+
+    .extra-details{
+        column-gap: 10rem;
+    }
+}
